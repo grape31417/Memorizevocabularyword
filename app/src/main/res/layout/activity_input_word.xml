@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.bluedream.memorizevocabularyword.inputWord">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="請輸入單字中文"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/edtCht"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="請輸入單字英文"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/edtEng"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btnAddWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="輸入" />
+
+    <Button
+        android:id="@+id/btnRemoveLasrWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="清除上一個" />
+
+    <TextView
+        android:id="@+id/txtInputResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/btnInputExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="結束離開" />
+
+</LinearLayout>
