@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    private Button mbtnEnterInput,mbtnShowInput;
+    private Button mbtnEnterInput,mbtnShowInput,mbtnTestSetInput;
 
     public static final String DB_FILE = "Word.db",
             DB_TABLE = "word";
@@ -24,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mbtnEnterInput=(Button)findViewById(R.id.btnEnterInputActivity);
         mbtnShowInput=(Button)findViewById(R.id.btnEnterShowActivity);
+        mbtnTestSetInput=(Button)findViewById(R.id.btnEnterTestSetMode);
         mbtnEnterInput.setOnClickListener(btnEnterInput);
         mbtnShowInput.setOnClickListener(btnEnterShow);
+        mbtnTestSetInput.setOnClickListener(btnEnterTestSet);
 
 
         SQLiteDatabaseOpenHelper SQLiteDatabaseOpenHelper =
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 mWorddb.execSQL("CREATE TABLE " + DB_TABLE + " (" +
                         "_id INTEGER PRIMARY KEY," +
                         "Cht TEXT NOT NULL," +
-                        "Eng TEXT);" );
+                        "Eng TEXT"+")" );
             cursor.close();
         }
     }
@@ -52,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             Intent it =new Intent();
             it.setClass(MainActivity.this,inputWord.class);
             startActivity(it);
-
         }
     };
 
@@ -62,11 +63,14 @@ public class MainActivity extends AppCompatActivity {
             Intent it =new Intent();
             it.setClass(MainActivity.this,showWord.class);
             startActivity(it);
-
-
-
-
-
+        }
+    };
+    private View.OnClickListener btnEnterTestSet =new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent it =new Intent();
+            it.setClass(MainActivity.this,testWordSetMode.class);
+            startActivity(it);
         }
     };
 

@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".inputWord" />
         <activity android:name=".testWord" />
-        <activity android:name=".showWord"></activity>
+        <activity android:name=".showWord" />
+        <activity android:name=".testWordSetMode"></activity>
     </application>
 
 </manifest>

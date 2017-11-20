@@ -87,11 +87,13 @@ public class inputWord extends AppCompatActivity  {
     private View.OnClickListener exit =new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            int level =0;
 
                 for (int i = 1; i <= index; i++) {
                     ContentValues newRow = new ContentValues();
                     newRow.put("Cht", srrCht.get(i-1).toString());
                     newRow.put("Eng", srrEng.get(i-1).toString());
+                    //newRow.put("Level",level);
                     mWorddb.insert(DB_TABLE, null, newRow);
                 }
                 mWorddb.close();
