@@ -1,13 +1,24 @@
 package com.example.bluedream.memorizevocabularyword;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_FILE;
@@ -25,6 +36,9 @@ public class showWord extends AppCompatActivity {
             mBtnExitShowWord,
             mBtnDeleteDb;
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mActBarDrawerToggle;
+
 
 
 
@@ -32,6 +46,7 @@ public class showWord extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_word);
+        AppUtils.getInstance().addActivity(this);
 
         mEdtCht = (EditText)findViewById(R.id.edtName);
         mEdtEng = (EditText)findViewById(R.id.edtSex);
@@ -50,6 +65,23 @@ public class showWord extends AppCompatActivity {
         SQLiteDatabaseOpenHelper SQLiteDatabaseOpenHelper =
                 new SQLiteDatabaseOpenHelper(getApplicationContext(), DB_FILE, null, 1);
         mWorddb = SQLiteDatabaseOpenHelper.getWritableDatabase();
+
+        ActionBar actBar = getSupportActionBar();
+        actBar.setDisplayHomeAsUpEnabled(true);
+        actBar.setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.Drawlayout);
+        mActBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.app_name, R.string.app_name);
+        mActBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.addDrawerListener(mActBarDrawerToggle);
+
+        ListView listView = (ListView) findViewById(R.id.menu_list);
+        ArrayAdapter<CharSequence> menulist =
+                ArrayAdapter.createFromResource(this, R.array.Menu_List,
+                        android.R.layout.simple_list_item_1);
+        listView.setAdapter(menulist);
+        listView.setOnItemClickListener(listViewOnItemClick);
     }
 
 
@@ -87,8 +119,7 @@ public class showWord extends AppCompatActivity {
     private View.OnClickListener btnListOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Cursor c = mWorddb.query(true, DB_TABLE, new String[]{"Cht", "Eng",}, 	null, null, null, null, null, null);
-
+            Cursor c = mWorddb.query(true, DB_TABLE, new String[]{"Cht","Eng","Level"}, null, null, null, null, null, null);
             if (c == null)
                 return;
 
@@ -98,11 +129,20 @@ public class showWord extends AppCompatActivity {
                         .show();
             }
             else {
-                c.moveToFirst();
-                mEdtList.setText(c.getString(0) + c.getString(1));
+                String s="";
 
-                while (c.moveToNext())
-                    mEdtList.append("\n" + c.getString(0) + c.getString(1) );
+
+                c.moveToFirst();
+                if(c.getInt(2)==3) s="  已背誦";
+                if(c.getInt(2)!=3) s="  未背誦";
+
+                mEdtList.setText(c.getString(0) + c.getString(1)+s);
+
+                while (c.moveToNext()) {
+                    if (c.getInt(2) == 3) s = "  已背誦";
+                    if (c.getInt(2) != 3) s = "  未背誦";
+                    mEdtList.append("\n" + c.getString(0) + c.getString(1) + s);
+                }
             }
         }
     };
@@ -141,7 +181,8 @@ public class showWord extends AppCompatActivity {
                     mWorddb.execSQL("CREATE TABLE " + DB_TABLE + " (" +
                             "_id INTEGER PRIMARY KEY," +
                             "Cht TEXT NOT NULL," +
-                            "Eng TEXT);" );
+                            "Eng TEXT NOT NULL,"+
+                            "Level INTEGER NOT NULL);");
                 cursor.close();
             }
 
@@ -161,4 +202,63 @@ public class showWord extends AppCompatActivity {
             finish();
         }
     };
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mActBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mActBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // 要先把選單的項目傳給 ActionBarDrawerToggle 處理。
+        // 如果它回傳 true，表示處理完成，不需要再繼續往下處理。
+        if (mActBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    private AdapterView.OnItemClickListener listViewOnItemClick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view,
+                                int position, long id) {
+            switch(((TextView)view).getText().toString()) {
+                case "輸入單字":
+                    Intent it = new Intent();
+                    it.setClass(showWord.this, inputWord.class);
+                    startActivity(it);
+                    finish();
+                    break;
+                case "測驗模式":
+                    it =new Intent();
+                    it.setClass(showWord.this,testWordSetMode.class);
+                    startActivity(it);
+                    finish();
+                    break;
+                case "列表模式":
+                    it =new Intent();
+                    it.setClass(showWord.this,showWord.class);
+                    startActivity(it);
+                    finish();
+                    break;
+                case "關閉程式":
+                    AppUtils.getInstance().exit();
+                    finish();
+
+            }
+            mDrawerLayout.closeDrawers();
+        }
+    };
+
+
 }

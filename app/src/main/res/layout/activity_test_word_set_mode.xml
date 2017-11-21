@@ -1,65 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.bluedream.memorizevocabularyword.testWordSetMode">
-
-
-    <RadioGroup
-        android:id="@+id/rgTestmode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="66dp">
-
-        <RadioButton
-            android:id="@+id/rbbNotLearn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="比較不熟的單字"
-            tools:layout_editor_absoluteX="31dp"
-            tools:layout_editor_absoluteY="99dp" />
-
-        <RadioButton
-            android:id="@+id/rbRandom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="隨機模式"
-            tools:layout_editor_absoluteX="31dp"
-            tools:layout_editor_absoluteY="46dp" />
-    </RadioGroup>
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="測試題數"
-        tools:layout_editor_absoluteX="279dp"
-        tools:layout_editor_absoluteY="49dp" />
+    tools:context="com.example.bluedream.memorizevocabularyword.MainActivity"
+    android:id="@+id/Drawlayout">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnSetModeBack"
+
+        <RadioGroup
+            android:id="@+id/rgTestmode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="返回"
-            tools:layout_editor_absoluteX="41dp"
-            tools:layout_editor_absoluteY="428dp" />
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="66dp">
 
-        <Button
-            android:id="@+id/btnEnterTestMode"
+            <RadioButton
+                android:id="@+id/rbbNotLearn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="比較不熟的單字"
+                tools:layout_editor_absoluteX="31dp"
+                tools:layout_editor_absoluteY="99dp" />
+
+            <RadioButton
+                android:id="@+id/rbRandom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="隨機模式"
+                tools:layout_editor_absoluteX="31dp"
+                tools:layout_editor_absoluteY="46dp" />
+        </RadioGroup>
+
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="開始"
-            tools:layout_editor_absoluteX="247dp"
-            tools:layout_editor_absoluteY="428dp" />
+            android:text="測試題數"
+            tools:layout_editor_absoluteX="279dp"
+            tools:layout_editor_absoluteY="49dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btnSetModeBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="返回"
+                tools:layout_editor_absoluteX="41dp"
+                tools:layout_editor_absoluteY="428dp" />
+
+            <Button
+                android:id="@+id/btnEnterTestMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="開始"
+                tools:layout_editor_absoluteX="247dp"
+                tools:layout_editor_absoluteY="428dp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:background="#d1eaef"
+        android:layout_gravity="start">
+
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/Menu_List">
+        </ListView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout >
 
 

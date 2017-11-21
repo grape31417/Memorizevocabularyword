@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.bluedream.memorizevocabularyword.MainActivity">
+    tools:context="com.example.bluedream.memorizevocabularyword.MainActivity"
+    android:id="@+id/Drawlayout">
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <Button
         android:id="@+id/btnEnterInputActivity"
         android:layout_width="match_parent"
@@ -20,9 +24,25 @@
         android:layout_height="wrap_content"
         android:text="單字列表" />
 
+
     <Button
         android:id="@+id/btnEnterTestSetMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="測驗模式" />
 </LinearLayout>
+    <LinearLayout
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:background="#d1eaef"
+        android:layout_gravity="start">
+
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/Menu_List">
+        </ListView>
+
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>

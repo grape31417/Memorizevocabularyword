@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Memorize vocabulary word</string>
+    <string-array name="Menu_List">
+        <item>輸入單字</item>
+        <item>列表模式</item>
+        <item>測驗模式</item>
+        <item>關閉程式</item>
+    </string-array>
+
+
 </resources>
