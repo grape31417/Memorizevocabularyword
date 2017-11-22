@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         mbtnEnterInput=(Button)findViewById(R.id.btnEnterInputActivity);
         mbtnShowInput=(Button)findViewById(R.id.btnEnterShowActivity);
         mbtnTestSetInput=(Button)findViewById(R.id.btnEnterTestSetMode);
-        mbtnEnterInput.setOnClickListener(btnEnterInput);
-        mbtnShowInput.setOnClickListener(btnEnterShow);
-        mbtnTestSetInput.setOnClickListener(btnEnterTestSet);
+        //mbtnEnterInput.setOnClickListener(btnEnterInput);
+        //mbtnShowInput.setOnClickListener(btnEnterShow);
+        //mbtnTestSetInput.setOnClickListener(btnEnterTestSet);
 
 
         //開啟資料庫
@@ -86,31 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    private View.OnClickListener btnEnterInput =new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent it =new Intent();
-            it.setClass(MainActivity.this,inputWord.class);
-            startActivity(it);
-        }
-    };
-
-    private View.OnClickListener btnEnterShow =new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent it =new Intent();
-            it.setClass(MainActivity.this,showWord.class);
-            startActivity(it);
-        }
-    };
-    private View.OnClickListener btnEnterTestSet =new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent it =new Intent();
-            it.setClass(MainActivity.this,testWordSetMode.class);
-            startActivity(it);
-        }
-    };
 
 
     //側開選單功能
@@ -168,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
             mDrawerLayout.closeDrawers();
         }
     };
+
+
+
 
 
 

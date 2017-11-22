@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import static android.provider.BaseColumns._ID;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 import static android.R.attr.mode;
@@ -29,7 +31,7 @@ import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_FILE;
 import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_TABLE;
 
 public class testWord extends AppCompatActivity {
-    private Button mEnter, mExit, mTip;
+    private Button mEnter, mExit, mSpeak;
     private ArrayList<String> srrCht = new ArrayList();
     private ArrayList<String> srrEng = new ArrayList();
     private ArrayList<Integer> id = new ArrayList();
@@ -42,6 +44,7 @@ public class testWord extends AppCompatActivity {
     int iRan, WordsSize;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActBarDrawerToggle;
+    TextToSpeech spek;
 
 
     @Override
@@ -71,7 +74,7 @@ public class testWord extends AppCompatActivity {
         Intent it = getIntent();
         mEnter = (Button) findViewById(R.id.btnEnter);
         mExit = (Button) findViewById(R.id.btnExit);
-        mTip = (Button) findViewById(R.id.btnTip);
+        mSpeak = (Button) findViewById(R.id.btnTip);
         Question = (TextView) findViewById(R.id.ChtName);
         Result = (TextView) findViewById(R.id.Result);
         Answer = (EditText) findViewById(R.id.edtEng);
@@ -83,12 +86,19 @@ public class testWord extends AppCompatActivity {
         mode = bundle.getInt("mode");
         WordsSize = srrCht.size();
 
+        spek = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+            }
+        });
+        spek.setLanguage(Locale.US);
+
 
         iRan = (int) (Math.random() * WordsSize);
         ChoseWord = srrEng.get(iRan).toString();
         Question.setText(srrCht.get(iRan).toString());
 
-        // mTip.setOnClickListener(Tip);
+        mSpeak.setOnClickListener(Speak);
         mExit.setOnClickListener(Exit);
         mEnter.setOnClickListener(Enter);
     }
@@ -256,4 +266,23 @@ public class testWord extends AppCompatActivity {
 
         }
     };
+
+    private View.OnClickListener Speak =new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            spek.speak(srrEng.get(iRan).toString(),TextToSpeech.QUEUE_FLUSH,null);
+        }
+    };
+
+    @Override
+    public void onDestroy()
+    {
+        if (spek != null)
+        {
+            spek.stop();
+            spek.shutdown();
+        }
+        super.onDestroy();
+    }
+
 }
