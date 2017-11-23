@@ -30,7 +30,7 @@ import static android.R.attr.mode;
 import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_FILE;
 import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_TABLE;
 
-public class testWord extends AppCompatActivity {
+public class testWord extends AppCompatActivity  {
     private Button mEnter, mExit, mSpeak;
     private ArrayList<String> srrCht = new ArrayList();
     private ArrayList<String> srrEng = new ArrayList();
@@ -86,12 +86,15 @@ public class testWord extends AppCompatActivity {
         mode = bundle.getInt("mode");
         WordsSize = srrCht.size();
 
+
         spek = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
+                spek.setLanguage(Locale.US);
+
             }
         });
-        spek.setLanguage(Locale.US);
+
 
 
         iRan = (int) (Math.random() * WordsSize);

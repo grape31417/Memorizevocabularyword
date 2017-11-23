@@ -12,25 +12,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/btnEnterInputActivity"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="輸入模式" />
-
-    <Button
-        android:id="@+id/btnEnterShowActivity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="單字列表" />
+        android:text="" />
 
 
-    <Button
-        android:id="@+id/btnEnterTestSetMode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="測驗模式" />
+    <FrameLayout
+        android:id="@+id/frameLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+
 </LinearLayout>
+
+
+
     <LinearLayout
         android:layout_width="240dp"
         android:layout_height="match_parent"

@@ -1,15 +1,20 @@
 package com.example.bluedream.memorizevocabularyword;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Button mbtnEnterInput,mbtnShowInput,mbtnTestSetInput;
@@ -29,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mActBarDrawerToggle;
 
+    private final static String TAG_FRAGMENT_RESULT_1 = "Result 1",
+            TAG_FRAGMENT_RESULT_2 = "Result 2";
+
+    private android.support.v4.app.FragmentManager manager;
+    private android.support.v4.app.FragmentTransaction transaction;
+
 
 
     @Override
@@ -37,12 +51,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         AppUtils.getInstance().addActivity(this);
 
-        mbtnEnterInput=(Button)findViewById(R.id.btnEnterInputActivity);
-        mbtnShowInput=(Button)findViewById(R.id.btnEnterShowActivity);
-        mbtnTestSetInput=(Button)findViewById(R.id.btnEnterTestSetMode);
-        //mbtnEnterInput.setOnClickListener(btnEnterInput);
-        //mbtnShowInput.setOnClickListener(btnEnterShow);
-        //mbtnTestSetInput.setOnClickListener(btnEnterTestSet);
+
+
+
 
 
         //開啟資料庫
@@ -63,6 +74,30 @@ public class MainActivity extends AppCompatActivity {
                         "Level INTEGER NOT NULL);");
             cursor.close();
         }
+
+        Cursor c = mWorddb.query(true, DB_TABLE, new String[]{"Level"}, 	null, null, null, null, null, null);
+        int rowCount =c.getCount();
+        c.close();
+
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        noword noword =new noword();
+       allwordcard allword =new allwordcard();
+
+       if(rowCount==0)
+        {
+            transaction.replace(R.id.frameLay, noword, "noword");
+            //transaction.addToBackStack("noword");
+        }
+
+       if (rowCount!=0)
+       {
+           transaction.replace(R.id.frameLay, allword, "allword");
+            //transaction.addToBackStack("allword");
+        }
+        transaction.commit();
+
+
 
 
         // 設定側開式選單。
