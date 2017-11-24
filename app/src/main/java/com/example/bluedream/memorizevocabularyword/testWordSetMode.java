@@ -40,11 +40,8 @@ public class testWordSetMode extends AppCompatActivity {
     private ArrayList<Integer> id= new ArrayList();
     private ArrayList<Integer> level= new ArrayList();
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_word_set_mode);
+    private void iniz()
+    {
         AppUtils.getInstance().addActivity(this);
 
         SQLiteDatabaseOpenHelper SQLiteDatabaseOpenHelper =
@@ -57,7 +54,10 @@ public class testWordSetMode extends AppCompatActivity {
 
         mBtnSetModeBack.setOnClickListener(returntitle);
         mbtnEnterTestMode.setOnClickListener(GOTest);
+    }
 
+    private void setActionBar()
+    {
         ActionBar actBar = getSupportActionBar();
         actBar.setDisplayHomeAsUpEnabled(true);
         actBar.setHomeButtonEnabled(true);
@@ -76,6 +76,17 @@ public class testWordSetMode extends AppCompatActivity {
         listView.setOnItemClickListener(listViewOnItemClick);
     }
 
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test_word_set_mode);
+        iniz();
+        setActionBar();
+
+    }
+
     private View.OnClickListener returntitle = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -92,60 +103,85 @@ public class testWordSetMode extends AppCompatActivity {
             switch (testMode.getCheckedRadioButtonId())
             {
                 case R.id.rbbNotLearn:
-                    mode=1;
-                    c.moveToFirst();
-                        for (int i = 1; i <= rowCount; i++) {
-                            if(c.getInt(3)!=3) {
-                                srrCht.add(c.getString(0));
-                                srrEng.add(c.getString(1));
-                                id.add(c.getInt(2));
-                                level.add(c.getInt(3));
-                                c.moveToNext();
-                            }
-                            else c.moveToNext();
-                        }
-
+                    learnModeInput(rowCount,c);
                     break;
                 case  R.id.rbRandom :
-                    mode=2;
-                    c.moveToFirst();
-                    for (int i=1;i<=rowCount;i++) {
-                        srrCht.add(c.getString(0));
-                        srrEng.add(c.getString(1));
-                        id.add(c.getInt(2));
-                        level.add(c.getInt(3));
-                        c.moveToNext();
-                    }
+                    RandModeInput(rowCount,c);
                     break;
             }
             c.close();
+            CheckWordEmpty(srrEng);
 
-            if (srrEng.isEmpty()) {
-                MyAlertDialog check = new MyAlertDialog(testWordSetMode.this);
-                check.setTitle("哈囉");
-                check.setMessage("單字庫已沒單字可背  請至輸入模式輸入");
-                check.setIcon(android.R.drawable.ic_dialog_alert);
-                check.setCancelable(false);
-                check.setButton(DialogInterface.BUTTON_POSITIVE, "確定", checkyes);
-                check.show();
 
-            }
-            if (srrEng.isEmpty()==false) {
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("srrCht", srrCht);
-                bundle.putStringArrayList("srrEng", srrEng);
-                bundle.putIntegerArrayList("id", id);
-                bundle.putIntegerArrayList("level", level);
-                bundle.putInt("mode", mode);
-                Intent it = new Intent();
-                it.setClass(testWordSetMode.this, testWord.class);
-                it.putExtras(bundle);
-                startActivity(it);
-                mWorddb.close();
-                finish();
-            }
         }
     };
+    private void learnModeInput(int rowCount ,Cursor c)
+    {
+        mode=1;
+        c.moveToFirst();
+        for (int i = 1; i <= rowCount; i++) {
+            if(c.getInt(3)!=3) {
+                srrCht.add(c.getString(0));
+                srrEng.add(c.getString(1));
+                id.add(c.getInt(2));
+                level.add(c.getInt(3));
+                c.moveToNext();
+            }
+            else c.moveToNext();
+        }
+    }
+
+    private void RandModeInput(int rowCount ,Cursor c)
+    {
+        mode=2;
+        c.moveToFirst();
+        for (int i=1;i<=rowCount;i++) {
+            srrCht.add(c.getString(0));
+            srrEng.add(c.getString(1));
+            id.add(c.getInt(2));
+            level.add(c.getInt(3));
+            c.moveToNext();
+        }
+    }
+
+    private void CheckWordEmpty(ArrayList srrEng)
+    {
+        if (srrEng.isEmpty()) {
+            MyAlertDialog check = new MyAlertDialog(testWordSetMode.this);
+            check.setTitle("哈囉");
+            check.setMessage("單字庫已沒單字可背  請至輸入模式輸入");
+            check.setIcon(android.R.drawable.ic_dialog_alert);
+            check.setCancelable(false);
+            check.setButton(DialogInterface.BUTTON_POSITIVE, "確定", checkyes);
+            check.show();
+
+        }
+        if (srrEng.isEmpty()==false) {
+            Bundle bundle = new Bundle();
+            bundle.putStringArrayList("srrCht", srrCht);
+            bundle.putStringArrayList("srrEng", srrEng);
+            bundle.putIntegerArrayList("id", id);
+            bundle.putIntegerArrayList("level", level);
+            bundle.putInt("mode", mode);
+            Intent it = new Intent();
+            it.setClass(testWordSetMode.this, testWord.class);
+            it.putExtras(bundle);
+            startActivity(it);
+            mWorddb.close();
+            finish();
+        }
+    }
+    private DialogInterface.OnClickListener checkyes = new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            Intent it = new Intent();
+            it.setClass(testWordSetMode.this, inputWord.class);
+            startActivity(it);
+        }
+    };
+
+
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -178,43 +214,37 @@ public class testWordSetMode extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view,
                                 int position, long id) {
-            switch(((TextView)view).getText().toString()) {
-                case "輸入單字":
-                    Intent it = new Intent();
-                    it.setClass(testWordSetMode.this, inputWord.class);
-                    startActivity(it);
-                    finish();
-                    break;
-                case "測驗模式":
-                    it =new Intent();
-                    it.setClass(testWordSetMode.this,testWordSetMode.class);
-                    startActivity(it);
-                    finish();
-                    break;
-                case "列表模式":
-                    it =new Intent();
-                    it.setClass(testWordSetMode.this,showWord.class);
-                    startActivity(it);
-                    finish();
-                    break;
-                case "關閉程式":
-                    AppUtils.getInstance().exit();
-                    finish();
-
-            }
+            SlectMenuList(((TextView)view).getText().toString());
+            finish();
             mDrawerLayout.closeDrawers();
         }
     };
-
-    private DialogInterface.OnClickListener checkyes = new DialogInterface.OnClickListener() {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            Intent it = new Intent();
-            it.setClass(testWordSetMode.this, inputWord.class);
-            startActivity(it);
+    public  void SlectMenuList(String string)
+    {
+        Intent it =new Intent();
+        switch(string) {
+            case "輸入單字":
+                it = new Intent();
+                it.setClass(this, inputWord.class);
+                startActivity(it);
+                break;
+            case "測驗模式":
+                it =new Intent();
+                it.setClass(this,testWordSetMode.class);
+                startActivity(it);
+                break;
+            case "列表模式":
+                it =new Intent();
+                it.setClass(this,showWord.class);
+                startActivity(it);
+                break;
+            case "關閉程式":
+                AppUtils.getInstance().exit();
+                finish();
         }
-    };
+    }
+
+
 
 
 

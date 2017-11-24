@@ -44,16 +44,51 @@ public class testWord extends AppCompatActivity  {
     int iRan, WordsSize;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActBarDrawerToggle;
-    TextToSpeech spek;
+    private TextToSpeech spek;
+    private SQLiteDatabase mWorddb;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_word);
+
+    private void iniz()
+    {
         AppUtils.getInstance().addActivity(this);
+        DatabaseControler Database = new DatabaseControler(this.getApplicationContext());
+        Intent it = getIntent();
+        mEnter = (Button) findViewById(R.id.btnEnter);
+        mExit = (Button) findViewById(R.id.btnExit);
+        mSpeak = (Button) findViewById(R.id.btnTip);
+        Question = (TextView) findViewById(R.id.ChtName);
+        Result = (TextView) findViewById(R.id.Result);
+        Answer = (EditText) findViewById(R.id.edtEng);
+        Bundle bundle = it.getExtras();
+        srrCht = bundle.getStringArrayList("srrCht");
+        srrEng = bundle.getStringArrayList("srrEng");
+        level = bundle.getIntegerArrayList("level");
+        id = bundle.getIntegerArrayList("id");
+        mode = bundle.getInt("mode");
+        WordsSize = srrCht.size();
+        spek = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                spek.setLanguage(Locale.US);
+            }
+        });
 
+        mSpeak.setOnClickListener(Speak);
+        mExit.setOnClickListener(Exit);
+        mEnter.setOnClickListener(Enter);
 
+        iRan = (int) (Math.random() * WordsSize);
+        ChoseWord = srrEng.get(iRan).toString();
+        Question.setText(srrCht.get(iRan).toString());
+
+        mSpeak.setOnClickListener(Speak);
+        mExit.setOnClickListener(Exit);
+        mEnter.setOnClickListener(Enter);
+    }
+
+    private void setActionBar()
+    {
         ActionBar actBar = getSupportActionBar();
         actBar.setDisplayHomeAsUpEnabled(true);
         actBar.setHomeButtonEnabled(true);
@@ -70,63 +105,38 @@ public class testWord extends AppCompatActivity  {
                         android.R.layout.simple_list_item_1);
         listView.setAdapter(menulist);
         listView.setOnItemClickListener(listViewOnItemClick);
-
-        Intent it = getIntent();
-        mEnter = (Button) findViewById(R.id.btnEnter);
-        mExit = (Button) findViewById(R.id.btnExit);
-        mSpeak = (Button) findViewById(R.id.btnTip);
-        Question = (TextView) findViewById(R.id.ChtName);
-        Result = (TextView) findViewById(R.id.Result);
-        Answer = (EditText) findViewById(R.id.edtEng);
-        Bundle bundle = it.getExtras();
-        srrCht = bundle.getStringArrayList("srrCht");
-        srrEng = bundle.getStringArrayList("srrEng");
-        level = bundle.getIntegerArrayList("level");
-        id = bundle.getIntegerArrayList("id");
-        mode = bundle.getInt("mode");
-        WordsSize = srrCht.size();
+    }
 
 
-        spek = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                spek.setLanguage(Locale.US);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test_word);
+        setActionBar();
+        iniz();
 
-            }
-        });
-
-
-
-        iRan = (int) (Math.random() * WordsSize);
-        ChoseWord = srrEng.get(iRan).toString();
-        Question.setText(srrCht.get(iRan).toString());
-
-        mSpeak.setOnClickListener(Speak);
-        mExit.setOnClickListener(Exit);
-        mEnter.setOnClickListener(Enter);
     }
 
     private View.OnClickListener Exit = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int counter = CompleteWordid.size();
-            if(counter!=0) {
-
-                SQLiteDatabaseOpenHelper SQLiteDatabaseOpenHelper =
-                        new SQLiteDatabaseOpenHelper(getApplicationContext(), DB_FILE, null, 1);
-                SQLiteDatabase mWorddb = SQLiteDatabaseOpenHelper.getWritableDatabase();
-
-                for (int i = 0; i < counter; i++) {
-                    String id = CompleteWordid.get(i).toString();
-
-                    mWorddb.execSQL("UPDATE "+DB_TABLE +" SET Level = 3 WHERE _ID = "+id+";");
-
-                }
-            }
-
-            finish();
+            saveLevelData();
         }
     };
+    private void saveLevelData()
+    {
+        int counter = CompleteWordid.size();
+        if(counter!=0) {
+            DatabaseControler Database = new DatabaseControler(this.getApplicationContext());
+            mWorddb = Database.OpenDatabase();
+            for (int i = 0; i < counter; i++) {
+                String id = CompleteWordid.get(i).toString();
+
+                mWorddb.execSQL("UPDATE "+DB_TABLE +" SET Level = 3 WHERE _ID = "+id+";");
+            }
+        }
+        finish();
+    }
 
     private View.OnClickListener Enter = new View.OnClickListener() {
         @Override
@@ -134,64 +144,71 @@ public class testWord extends AppCompatActivity  {
             String InputAnswer;
             switch (mode) {
                 case 1:
-                    if (srrCht.isEmpty() == false) {
-                        InputAnswer = Answer.getText().toString();
-                        Answer.setText("");
-                        if (srrEng.get(iRan).equals(InputAnswer)) {
-                            Result.setText("答對了");
-                            if (level.get(iRan) < 3) {
-                                level.set(iRan, level.get(iRan) + 1);
-                            }
-                            if (level.get(iRan) == 3) {
-                                CompleteWordid.add(id.get(iRan));
-                                level.remove(iRan);
-                                srrEng.remove(iRan);
-                                srrCht.remove(iRan);
-                                id.remove(iRan);
-                                WordsSize = WordsSize - 1;
-                            }
-                        } else {
-                            Result.setText("答錯了 正解:" + srrEng.get(iRan));
-                        }
-                        if(WordsSize!=0) {
-                            iRan = (int) (Math.random() * WordsSize);
-                            ChoseWord = srrEng.get(iRan).toString();
-                            Question.setText(srrCht.get(iRan).toString());
-                        }
-                        break;
-                    }
-                    if(srrCht.isEmpty())  {
-                        MyAlertDialog check = new MyAlertDialog(testWord.this);
-                        check.setTitle("恭喜");
-                        check.setMessage("你已背完所有單字");
-                        check.setIcon(android.R.drawable.ic_dialog_alert);
-                        check.setCancelable(false);
-                        check.setButton(DialogInterface.BUTTON_POSITIVE, "確定", checkyes);
-                        check.show();
-                        break;
-                    }
-
+                  LearnMode();
+                    break;
                 case 2:
-                    InputAnswer = Answer.getText().toString();
-                    Answer.setText("");
-                    if (srrEng.get(iRan).equals(InputAnswer)) {
-                        Result.setText("答對了");
-                        if (level.get(iRan) < 3) {
-                            level.set(iRan, level.get(iRan) + 1);
-                        } else if (level.get(iRan) == 3) {
-                            CompleteWordid.add(id.get(iRan));
-                            level.set(iRan, level.get(iRan) + 1);
-                        }
-                    } else {
-                        Result.setText("答錯了 正解:" + srrEng.get(iRan));
-                    }
-                    iRan = (int) (Math.random() * WordsSize);
-                    ChoseWord = srrEng.get(iRan).toString();
-                    Question.setText(srrCht.get(iRan).toString());
+                    RandomMode();
+                    break;
 
             }
         }
     };
+    private void RandomMode()
+    {
+       String InputAnswer = Answer.getText().toString();
+        Answer.setText("");
+        if (srrEng.get(iRan).equals(InputAnswer)) {
+            Result.setText("答對了");
+            if (level.get(iRan) < 3) {
+                level.set(iRan, level.get(iRan) + 1);
+            } else if (level.get(iRan) == 3) {
+                CompleteWordid.add(id.get(iRan));
+                level.set(iRan, level.get(iRan) + 1);
+            }
+        } else {
+            Result.setText("答錯了 正解:" + srrEng.get(iRan));
+        }
+        iRan = (int) (Math.random() * WordsSize);
+        ChoseWord = srrEng.get(iRan).toString();
+        Question.setText(srrCht.get(iRan).toString());
+    }
+    private void LearnMode()
+    {
+        if (srrCht.isEmpty() == false) {
+            String InputAnswer = Answer.getText().toString();
+            Answer.setText("");
+            if (srrEng.get(iRan).equals(InputAnswer)) {
+                Result.setText("答對了");
+                if (level.get(iRan) < 3) {
+                    level.set(iRan, level.get(iRan) + 1);
+                }
+                if (level.get(iRan) == 3) {
+                    CompleteWordid.add(id.get(iRan));
+                    level.remove(iRan);
+                    srrEng.remove(iRan);
+                    srrCht.remove(iRan);
+                    id.remove(iRan);
+                    WordsSize = WordsSize - 1;
+                }
+            } else {
+                Result.setText("答錯了 正解:" + srrEng.get(iRan));
+            }
+            if(WordsSize!=0) {
+                iRan = (int) (Math.random() * WordsSize);
+                ChoseWord = srrEng.get(iRan).toString();
+                Question.setText(srrCht.get(iRan).toString());
+            }
+        }
+        if(srrCht.isEmpty())  {
+            MyAlertDialog check = new MyAlertDialog(testWord.this);
+            check.setTitle("恭喜");
+            check.setMessage("你已背完所有單字");
+            check.setIcon(android.R.drawable.ic_dialog_alert);
+            check.setCancelable(false);
+            check.setButton(DialogInterface.BUTTON_POSITIVE, "確定", checkyes);
+            check.show();
+        }
+    }
 
 
     @Override
@@ -222,51 +239,43 @@ public class testWord extends AppCompatActivity  {
         @Override
         public void onItemClick(AdapterView<?> parent, View view,
                                 int position, long id) {
-            switch (((TextView) view).getText().toString()) {
-                case "輸入單字":
-                    Intent it = new Intent();
-                    it.setClass(testWord.this, inputWord.class);
-                    startActivity(it);
-                    finish();
-                    break;
-                case "測驗模式":
-                    it = new Intent();
-                    it.setClass(testWord.this, testWordSetMode.class);
-                    startActivity(it);
-                    finish();
-                    break;
-                case "列表模式":
-                    it = new Intent();
-                    it.setClass(testWord.this, showWord.class);
-                    startActivity(it);
-                    finish();
-                    break;
-                case "關閉程式":
-                    AppUtils.getInstance().exit();
-                    finish();
-            }
+            SlectMenuList (((TextView) view).getText().toString());
+            finish();
             mDrawerLayout.closeDrawers();
         }
     };
+
+    public  void SlectMenuList(String string)
+    {
+        Intent it =new Intent();
+        switch(string) {
+            case "輸入單字":
+                it = new Intent();
+                it.setClass(this, inputWord.class);
+                startActivity(it);
+                break;
+            case "測驗模式":
+                it =new Intent();
+                it.setClass(this,testWordSetMode.class);
+                startActivity(it);
+                break;
+            case "列表模式":
+                it =new Intent();
+                it.setClass(this,showWord.class);
+                startActivity(it);
+                break;
+            case "關閉程式":
+                AppUtils.getInstance().exit();
+                finish();
+        }
+    }
+
     private DialogInterface.OnClickListener checkyes = new DialogInterface.OnClickListener() {
 
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            int counter = CompleteWordid.size();
-
-            SQLiteDatabaseOpenHelper SQLiteDatabaseOpenHelper =
-                    new SQLiteDatabaseOpenHelper(getApplicationContext(), DB_FILE, null, 1);
-            SQLiteDatabase mWorddb = SQLiteDatabaseOpenHelper.getWritableDatabase();
-
-            for (int i = 0; i < counter; i++) {
-                String id = CompleteWordid.get(i).toString();
-
-                mWorddb.execSQL("UPDATE "+DB_TABLE +" SET Level = 3 WHERE _ID = "+id+";");
-
-            }
-            finish();
-
+            saveLevelData();
         }
     };
 
