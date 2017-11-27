@@ -1,6 +1,8 @@
 package com.example.bluedream.memorizevocabularyword;
 
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +38,7 @@ public class inputWord extends AppCompatActivity  {
     public SQLiteDatabase mWorddb;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActBarDrawerToggle;
+
 
 
     @Override
@@ -208,6 +212,43 @@ public class inputWord extends AppCompatActivity  {
         mbtnInputExit.setOnClickListener(exit);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+               checkexit();
+        }
+        return false;
+    }
+
+    private void checkexit ()
+    {
+        if (srrCht.isEmpty()==false) {
+            MyAlertDialog isExit = new MyAlertDialog(inputWord.this);
+            isExit.setTitle("退出確認");
+            isExit.setMessage("有單字未保存 是否退出?");
+            isExit.setIcon(android.R.drawable.ic_dialog_alert);
+            isExit.setCancelable(false);
+            isExit.setButton(DialogInterface.BUTTON_POSITIVE, "是", checkyes);
+            isExit.setButton(DialogInterface.BUTTON_NEGATIVE, "否", checkNO);
+            isExit.show();
+        }
+        else
+            finish();
+
+    }
+
+    private DialogInterface.OnClickListener checkyes =new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            finish();
+        }
+    };
+    private DialogInterface.OnClickListener checkNO =new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+        }
+    };
 
 
     @Override

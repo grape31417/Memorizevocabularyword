@@ -45,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DatabaseControler Database = new DatabaseControler(this.getApplicationContext());
+        mWorddb=Database.OpenDatabase();
+        int rowCount =Database.DatabaseCount();
+        SwitchFragment switchFragment =new SwitchFragment(rowCount,manager);
+    }
 
     //側開選單功能
     @Override

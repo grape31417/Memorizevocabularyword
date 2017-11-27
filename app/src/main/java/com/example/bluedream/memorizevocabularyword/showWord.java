@@ -18,18 +18,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_FILE;
+import java.util.ArrayList;
+
 import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_TABLE;
 
 public class showWord extends AppCompatActivity {
     private SQLiteDatabase mWorddb;
     private EditText mEdtCht, mEdtEng, mEdtList;
-    private Button mBtnQuery, mBtnList, mBtnExitShowWord, mBtnDeleteDb;
+    private Button mBtnQuery, mBtnList, mBtnExitShowWord, mBtnDeleteDb,mBtnDeleteChoseWord;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActBarDrawerToggle;
+    private Spinner mSpinerWordList;
+    private ArrayList<String> spinerlist= new ArrayList();
+    private ArrayList<Integer> srrid = new ArrayList();
+    private final static String _ID = "_id";
+    int choseid,deletemode;
 
     private void iniz()
     {
@@ -43,21 +50,40 @@ public class showWord extends AppCompatActivity {
         mBtnList = (Button)findViewById(R.id.btnList);
         mBtnExitShowWord=(Button)findViewById(R.id.exit);
         mBtnDeleteDb =(Button)findViewById(R.id.btnDeleteAll) ;
+        mBtnDeleteChoseWord=(Button)findViewById(R.id.btnDleteChoseWord);
+        mSpinerWordList=(Spinner)findViewById(R.id.spinnerwordlist);
 
         mBtnQuery.setOnClickListener(btnQueryOnClick);
         mBtnList.setOnClickListener(btnListOnClick);
         mBtnExitShowWord.setOnClickListener(btnInputExit);
         mBtnDeleteDb.setOnClickListener(btnClickDelete);
+        mBtnDeleteChoseWord.setOnClickListener(btnDleteChoseWord);
+        mSpinerWordList.setOnItemSelectedListener(spinerlistChose);
+
+
+
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_word);
-        iniz();
         DatabaseControler Database = new DatabaseControler(this.getApplicationContext());
         mWorddb=Database.OpenDatabase();
+        Cursor c = Database.query(true,true,true,true);
+        c.close();
+        iniz();
+
         setActionBar();
+    }
+
+    private void setSpinerlist ()
+    {
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_spinner_item, spinerlist); //selected item will look like a spinner set from XML
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinerWordList.setAdapter(spinnerArrayAdapter);
     }
 
 
@@ -66,20 +92,21 @@ public class showWord extends AppCompatActivity {
     private View.OnClickListener btnQueryOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-      Query();
+            Query();
         }
     };
     private void Query() {
+        spinerlist.clear();
+        srrid.clear();
         Cursor c = null;
         if (!mEdtCht.getText().toString().equals("")) {
-            c = mWorddb.query(true, DB_TABLE, new String[]{"Cht", "Eng"}, "Cht=" + "\"" + mEdtCht.getText().toString()
+            c = mWorddb.query(true, DB_TABLE, new String[]{"Cht", "Eng","_id"}, "Cht=" + "\"" + mEdtCht.getText().toString()
                     + "\"", null, null, null, null, null);
         } else if (!mEdtEng.getText().toString().equals("")) {
-            c = mWorddb.query(true, DB_TABLE, new String[]{"Cht", "Eng",}, "Eng=" + "\"" + mEdtEng.getText().toString()
+            c = mWorddb.query(true, DB_TABLE, new String[]{"Cht", "Eng","_id"}, "Eng=" + "\"" + mEdtEng.getText().toString()
                     + "\"", null, null, null, null, null);
         }
         if (c == null) return;
-
 
         if (c.getCount() == 0) {
             mEdtList.setText("");
@@ -87,10 +114,14 @@ public class showWord extends AppCompatActivity {
         } else {
             c.moveToFirst();
             mEdtList.setText(c.getString(0) + c.getString(1));
+            spinerlist.add(c.getString(0) + c.getString(1));
+            srrid.add(c.getInt(2));
             while (c.moveToNext())
                 mEdtList.append("\n" + c.getString(0) + c.getString(1));
         }
         c.close();
+        deletemode=2;
+        setSpinerlist();
     }
 
     private View.OnClickListener btnListOnClick = new View.OnClickListener() {
@@ -101,7 +132,11 @@ public class showWord extends AppCompatActivity {
     };
     private void ListOn ()
     {
-        Cursor c = mWorddb.query(true, DB_TABLE, new String[]{"Cht","Eng","Level"}, null, null, null, null, null, null);
+        spinerlist.clear();
+        srrid.clear();
+        deletemode=1;
+
+        Cursor c = mWorddb.query(true, DB_TABLE, new String[]{"Cht","Eng","Level","_id"}, null, null, null, null, null, null);
         //Cursor c =Database.query(false,true,true,true);
         if (c == null)
             return;
@@ -115,15 +150,19 @@ public class showWord extends AppCompatActivity {
             c.moveToFirst();
             if(c.getInt(2)==3) s="  已背誦";
             if(c.getInt(2)!=3) s="  未背誦";
-
+            spinerlist.add(c.getString(0) + c.getString(1) + s);
+            srrid.add(c.getInt(3));
             mEdtList.setText(c.getString(0) + c.getString(1)+s);
 
             while (c.moveToNext()) {
                 if (c.getInt(2) == 3) s = "  已背誦";
                 if (c.getInt(2) != 3) s = "  未背誦";
+                spinerlist.add(c.getString(0) + c.getString(1) + s);
+                srrid.add(c.getInt(3));
                 mEdtList.append("\n" + c.getString(0) + c.getString(1) + s);
             }
         }
+        setSpinerlist();
         c.close();
     }
 
@@ -148,8 +187,7 @@ public class showWord extends AppCompatActivity {
     private DialogInterface.OnClickListener checkyes =new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-
-
+            deletedatabaseCheckYes ();
         }
     };
     private void deletedatabaseCheckYes ()
@@ -171,6 +209,30 @@ public class showWord extends AppCompatActivity {
         public void onClick(View v) {
             mWorddb.close();
             finish();
+        }
+    };
+
+    private View.OnClickListener btnDleteChoseWord =new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (deletemode) {
+                case 0:
+                    Toast.makeText(showWord.this,"無選取單字",Toast.LENGTH_LONG).show();
+                    break;
+                case 1:
+                    mWorddb.delete(DB_TABLE, _ID + "=" + choseid, null);
+                    Toast.makeText(showWord.this,"已刪除選取單字",Toast.LENGTH_LONG).show();
+                    ListOn();
+                    setSpinerlist();
+                    break;
+                case 2:
+                    mWorddb.delete(DB_TABLE, _ID + "=" + choseid, null);
+                    Toast.makeText(showWord.this,"已刪除選取單字",Toast.LENGTH_LONG).show();
+                    mEdtList.setText("");
+                    ListOn();
+                    setSpinerlist();
+            }
+
         }
     };
 
@@ -252,5 +314,18 @@ public class showWord extends AppCompatActivity {
                 finish();
         }
     }
+
+    private AdapterView.OnItemSelectedListener spinerlistChose =new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            choseid=srrid.get(position);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            deletemode=0;
+        }
+
+    };
 
 }

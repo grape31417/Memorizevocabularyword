@@ -55,9 +55,9 @@ public class DatabaseControler {
     public Cursor query (boolean _id,boolean Cht,boolean Eng,boolean Level)
     {
         String id="",cht="",eng="",level="";
-        if(_id==true)id="_id,";
-        if (Cht==true)cht="Cht,";
-        if(Eng==true)eng="Eng,";
+        if(_id==true)id="_id";
+        if (Cht==true)cht="Cht";
+        if(Eng==true)eng="Eng";
         if (Level==true)level="Level";
 
         Cursor c = mWorddb.query(true, DB_TABLE, new String[]{id,cht,eng,level}, null, null, null, null, null, null);

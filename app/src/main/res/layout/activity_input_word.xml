@@ -59,7 +59,7 @@
         android:id="@+id/btnInputExit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="結束離開" />
+        android:text="保存後離開" />
 </LinearLayout>
 
 

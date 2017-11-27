@@ -89,7 +89,19 @@
         android:layout_height="wrap_content" />
     </ScrollView>
 
-    <Button
+        <Spinner
+            android:id="@+id/spinnerwordlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"/>
+
+        <Button
+            android:id="@+id/btnDleteChoseWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="刪除所選單字" />
+
+        <Button
         android:id="@+id/btnDeleteAll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

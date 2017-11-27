@@ -12,4 +12,6 @@ public class MyAlertDialog extends AlertDialog {
     protected MyAlertDialog(@NonNull Context context) {
         super(context);
     }
+
+
 }
