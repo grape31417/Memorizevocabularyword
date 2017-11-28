@@ -1,16 +1,17 @@
 package com.example.bluedream.memorizevocabularyword;
 
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+
+import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,13 @@ import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_TABLE
  */
 public class wordcard extends Fragment {
 
+    private ArrayAdapter<String> arrayAdapter;
+    SwipeFlingAdapterView flingContainer;
+    private int i;
+
+
+
+
 
     public wordcard() {
         // Required empty public constructor
@@ -36,7 +44,6 @@ public class wordcard extends Fragment {
         // Inflate the layout for this fragment
 
 
-
         return inflater.inflate(R.layout.fragment_wordcard, container, false);
 
 
@@ -45,31 +52,65 @@ public class wordcard extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        flingContainer=(SwipeFlingAdapterView)getActivity().findViewById(R.id.SwipeFlingAdapterView);
+
         SQLiteDatabaseOpenHelper SQLiteDatabaseOpenHelper =
                 new SQLiteDatabaseOpenHelper(getActivity().getApplicationContext(), DB_FILE, null, 1);
         SQLiteDatabase mWorddb = SQLiteDatabaseOpenHelper.getWritableDatabase();
 
         Cursor c = mWorddb.query(true, DB_TABLE, new String[]{"Cht","Eng","_id","Level"}, 	null, null, null, null, null, null);
         int rowCount =c.getCount();
-        int MENULIST=5;
-        if(rowCount>=5)  MENULIST =5;
-        if(rowCount<5)  MENULIST =rowCount;
+         List<String> inputlist = new ArrayList<>();
 
-        List<String> listStrEng = new ArrayList<>();
-        List<String> listStrCht = new ArrayList<>();
 
-        c.move((int) (Math.random()*rowCount));
-        for (int i = 1; i <=MENULIST ; i++) {
-            if(c.getInt(3)!=3) {
-                listStrCht.add(c.getString(0));
-                listStrEng.add(c.getString(1));
-                c.move((int) (Math.random()*rowCount));
+        c.moveToFirst();
+        for (int i = 1; i <=rowCount ; i++) {
+                inputlist.add(c.getString(0)+" "+c.getString(1));
+                c.moveToNext();
             }
-        }
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
-        wordAdapter itemAdapter = new wordAdapter(listStrCht,listStrCht);
-        recyclerView.setAdapter(itemAdapter);
+        final  ArrayList arraylist = new ArrayList(inputlist);;
+         final ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.item, R.id.helloText,arraylist);
+        flingContainer.setAdapter(arrayAdapter);
+        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
+            @Override
+            public void removeFirstObjectInAdapter() {
+                // this is the simplest way to delete an object from the Adapter (/AdapterView)
+                arraylist.add(arraylist.get(0));
+                arraylist.remove(0);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onLeftCardExit(Object dataObject) {
+            }
+
+            @Override
+            public void onRightCardExit(Object dataObject) {
+            }
+
+            @Override
+            public void onAdapterAboutToEmpty(int itemsInAdapter) {
+                // Ask for more data here
+                flingContainer.setAdapter(arrayAdapter);
+                arrayAdapter.notifyDataSetChanged();
+                Log.d("LIST", "notified");
+                i++;
+            }
+
+            @Override
+            public void onScroll(float v) {
+
+            }
+        });
+
+        // Optionally add an OnItemClickListener
+        flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int itemPosition, Object dataObject) {
+            }
+        });
+
 
         c.close();
         mWorddb.close();

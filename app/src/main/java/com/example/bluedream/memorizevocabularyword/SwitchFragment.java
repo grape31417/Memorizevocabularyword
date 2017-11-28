@@ -11,6 +11,7 @@ public class SwitchFragment {
         transaction = manager.beginTransaction();
         noword noword =new noword();
         allwordcard allword =new allwordcard();
+        wordcard wordcard = new wordcard();
 
         if(rowCount==0)
         {
@@ -20,7 +21,7 @@ public class SwitchFragment {
 
         if (rowCount!=0)
         {
-            transaction.replace(R.id.frameLay, allword, "allword");
+            transaction.replace(R.id.frameLay, wordcard, "wordcard");
             //transaction.addToBackStack("allword");
         }
         transaction.commit();
