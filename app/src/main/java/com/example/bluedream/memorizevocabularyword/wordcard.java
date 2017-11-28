@@ -51,18 +51,20 @@ public class wordcard extends Fragment {
 
         Cursor c = mWorddb.query(true, DB_TABLE, new String[]{"Cht","Eng","_id","Level"}, 	null, null, null, null, null, null);
         int rowCount =c.getCount();
+        int MENULIST=5;
+        if(rowCount>=5)  MENULIST =5;
+        if(rowCount<5)  MENULIST =rowCount;
 
         List<String> listStrEng = new ArrayList<>();
         List<String> listStrCht = new ArrayList<>();
 
-        c.moveToFirst();
-        for (int i = 1; i <= rowCount; i++) {
+        c.move((int) (Math.random()*rowCount));
+        for (int i = 1; i <=MENULIST ; i++) {
             if(c.getInt(3)!=3) {
                 listStrCht.add(c.getString(0));
                 listStrEng.add(c.getString(1));
-                c.moveToNext();
+                c.move((int) (Math.random()*rowCount));
             }
-            else c.moveToNext();
         }
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));

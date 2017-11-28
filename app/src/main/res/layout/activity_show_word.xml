@@ -21,10 +21,11 @@
             android:layout_height="wrap_content"
             android:text="中文：" />
 
-        <EditText
-            android:id="@+id/edtName"
+        <AutoCompleteTextView
+            android:id="@+id/ACedtCht"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:completionThreshold="1" />
 
     </LinearLayout>
 
@@ -38,10 +39,11 @@
             android:layout_height="wrap_content"
             android:text="英文：" />
 
-        <EditText
-            android:id="@+id/edtSex"
+        <AutoCompleteTextView
+            android:id="@+id/ACedtEng"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:completionThreshold="1" />
 
     </LinearLayout>
 
@@ -53,7 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center" >
-
 
 
         <Button
@@ -83,29 +84,39 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <EditText
-        android:id="@+id/edtList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edtList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false" />
+
+            <Spinner
+                android:id="@+id/spinnerwordlist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog" />
+
+            <Button
+                android:id="@+id/btnDleteChoseWord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="刪除所選單字" />
+
+            <Button
+                android:id="@+id/btnDeleteAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="刪除所有單字" />
+        </LinearLayout>
     </ScrollView>
 
-        <Spinner
-            android:id="@+id/spinnerwordlist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"/>
 
-        <Button
-            android:id="@+id/btnDleteChoseWord"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="刪除所選單字" />
-
-        <Button
-        android:id="@+id/btnDeleteAll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="刪除所有單字" />
     </LinearLayout>
 
     <LinearLayout
