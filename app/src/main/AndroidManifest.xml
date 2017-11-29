@@ -15,11 +15,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".inputWord" />
-        <activity android:name=".testWord" />
-        <activity android:name=".showWord" />
-        <activity android:name=".testWordSetMode"></activity>
+        <activity android:name=".inputWord" android:screenOrientation="portrait"/>
+        <activity android:name=".testWord" android:screenOrientation="portrait"/>
+        <activity android:name=".showWord" android:screenOrientation="portrait"/>
+        <activity android:name=".testWordSetMode" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

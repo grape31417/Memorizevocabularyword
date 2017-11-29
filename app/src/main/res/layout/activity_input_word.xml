@@ -10,32 +10,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="請輸入單字中文"
-        android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/edtCht"
-        android:layout_width="match_parent"
+    <com.github.florent37.materialtextfield.MaterialTextField
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName" />
+        app:mtf_image="@drawable/sss"
+        app:mtf_animationDuration="1000"
+        app:mtf_cardColor="#fee6af"
+        app:mtf_labelColor="#337ae3"
+        app:mtf_openKeyboardOnFocus="true"
+        android:layout_gravity="center">
+        <EditText
+            android:id="@+id/edtCht"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="輸入單字的中文"
+            android:textColor="#333"
+            android:textColorHint="#666"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:ems="10"
+            android:inputType="textPersonName" />
+    </com.github.florent37.materialtextfield.MaterialTextField>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="請輸入單字英文"
-        android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/edtEng"
-        android:layout_width="match_parent"
+
+    <com.github.florent37.materialtextfield.MaterialTextField
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName" />
+        app:mtf_image="@drawable/sss"
+        app:mtf_animationDuration="1000"
+        app:mtf_cardColor="#fee6af"
+        app:mtf_labelColor="#337ae3"
+        app:mtf_openKeyboardOnFocus="true"
+        android:layout_gravity="center">
+        <EditText
+            android:id="@+id/edtEng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="輸入單字的英文"
+            android:textColor="#333"
+            android:textColorHint="#666"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:ems="10"
+            android:inputType="textPersonName" />
+    </com.github.florent37.materialtextfield.MaterialTextField>
+
+
 
     <Button
         android:id="@+id/btnAddWord"

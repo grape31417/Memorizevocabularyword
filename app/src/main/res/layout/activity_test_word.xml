@@ -7,6 +7,8 @@
     tools:context="com.example.bluedream.memorizevocabularyword.MainActivity"
     android:id="@+id/Drawlayout">
 
+
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -31,17 +33,31 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
-        <TextView
-            android:layout_width="match_parent"
+        <com.github.florent37.materialtextfield.MaterialTextField
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="英文：" />
+            app:mtf_image="@drawable/sss"
+            app:mtf_animationDuration="1000"
+            app:mtf_cardColor="#fee6af"
+            app:mtf_labelColor="#337ae3"
+            app:mtf_openKeyboardOnFocus="true"
+            android:layout_gravity="center">
 
-        <EditText
-            android:id="@+id/edtEng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/edtEng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="輸入英文"
+                android:textColor="#333"
+                android:textColorHint="#666"
+                android:textSize="15sp"
+                android:layout_gravity="center"/>
+
+        </com.github.florent37.materialtextfield.MaterialTextField>
 
     </LinearLayout>
 

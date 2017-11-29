@@ -8,24 +8,45 @@
     tools:context="com.example.bluedream.memorizevocabularyword.MainActivity"
     android:id="@+id/Drawlayout">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:orientation="vertical">
+
+
+        <com.timqi.sectorprogressview.ColorfulRingProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/crpv"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            app:bgColor="#e1e1e1"
+            app:fgColorEnd="#ff4800"
+            app:fgColorStart="#ffe400"
+            app:percent="75"
+            app:startAngle="0"
+            app:strokeWidth="21dp" />
 
 
         <RadioGroup
             android:id="@+id/rgTestmode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkedButton="@+id/rbRandom"
             tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="66dp">
+            tools:layout_editor_absoluteY="66dp"
+            android:layout_marginBottom="20dp"
+            android:layout_above="@+id/btnEnterTestMode"
+            android:layout_alignStart="@+id/btnEnterTestMode">
 
             <RadioButton
                 android:id="@+id/rbbNotLearn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="比較不熟的單字"
+                android:layout_above="@+id/btnSetModeBack"
+                android:layout_alignEnd="@+id/crpv"
+                android:text="學習模式"
                 tools:layout_editor_absoluteX="31dp"
                 tools:layout_editor_absoluteY="99dp" />
 
@@ -33,40 +54,66 @@
                 android:id="@+id/rbRandom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/rbbNotLearn"
+                android:layout_alignBottom="@+id/rbbNotLearn"
+                android:layout_alignStart="@+id/crpv"
                 android:text="隨機模式"
                 tools:layout_editor_absoluteX="31dp"
                 tools:layout_editor_absoluteY="46dp" />
+
         </RadioGroup>
 
 
-        <TextView
+        <Button
+            android:id="@+id/btnSetModeBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="測試題數"
-            tools:layout_editor_absoluteX="279dp"
-            tools:layout_editor_absoluteY="49dp" />
+            android:layout_gravity="center"
+            android:text="返回"
+            tools:layout_editor_absoluteX="41dp"
+            tools:layout_editor_absoluteY="428dp"
+            android:layout_marginBottom="33dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/crpv" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btnEnterTestMode"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="18dp"
+            android:text="開始"
+            tools:layout_editor_absoluteX="247dp"
+            tools:layout_editor_absoluteY="428dp"
+            android:layout_alignBaseline="@+id/btnSetModeBack"
+            android:layout_alignBottom="@+id/btnSetModeBack"
+            android:layout_alignEnd="@+id/crpv" />
 
-            <Button
-                android:id="@+id/btnSetModeBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="返回"
-                tools:layout_editor_absoluteX="41dp"
-                tools:layout_editor_absoluteY="428dp" />
 
-            <Button
-                android:id="@+id/btnEnterTestMode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="開始"
-                tools:layout_editor_absoluteX="247dp"
-                tools:layout_editor_absoluteY="428dp" />
-        </LinearLayout>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/judge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:layout_marginStart="35dp"
+            android:layout_above="@+id/rgTestmode"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="22dp" />
+
+        <TextView
+            android:id="@+id/percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/judge"
+            android:layout_marginBottom="106dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="60sp"
+            android:text="TextView" />
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="240dp"

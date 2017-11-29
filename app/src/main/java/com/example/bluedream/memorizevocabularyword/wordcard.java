@@ -70,7 +70,7 @@ public class wordcard extends Fragment {
                 c.moveToNext();
             }
         final  ArrayList arraylist = new ArrayList(inputlist);;
-         final ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.item, R.id.helloText,arraylist);
+         final ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.wordcardlayout, R.id.helloText,arraylist);
         flingContainer.setAdapter(arrayAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override

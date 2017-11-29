@@ -19,7 +19,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,7 +92,7 @@ public class showWord extends AppCompatActivity {
 
     private void setSpinerlist() {
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_spinner_item, spinlist); //selected item will look like a spinner set from XML
+                (this, android.R.layout.simple_spinner_item, spinlist); //selected wordcardlayout will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinerWordList.setAdapter(spinnerArrayAdapter);
     }
@@ -313,7 +312,7 @@ public class showWord extends AppCompatActivity {
         }
     };
 
-    public void SlectMenuList(String string) {
+    private void SlectMenuList(String string) {
         Intent it = new Intent();
         switch (string) {
             case "輸入單字":
@@ -353,8 +352,8 @@ public class showWord extends AppCompatActivity {
     private View.OnClickListener autoComplete = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v==mEdtEng)mEdtEng.showDropDown();
-            if(v==mEdtCht)mEdtCht.showDropDown();
+           // if(v==mEdtEng)mEdtEng.showDropDown();
+           // if(v==mEdtCht)mEdtCht.showDropDown();
         }
     };
 }

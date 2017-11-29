@@ -5,22 +5,22 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.NumberPicker;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.timqi.sectorprogressview.ColorfulRingProgressView;
 
 import java.util.ArrayList;
 
@@ -39,6 +39,11 @@ public class testWordSetMode extends AppCompatActivity {
     private ArrayList<String> srrEng= new ArrayList();
     private ArrayList<Integer> id= new ArrayList();
     private ArrayList<Integer> level= new ArrayList();
+    private ColorfulRingProgressView crpv;
+    private TextView judge,percent;
+
+
+
 
     private void iniz()
     {
@@ -76,6 +81,47 @@ public class testWordSetMode extends AppCompatActivity {
         listView.setOnItemClickListener(listViewOnItemClick);
     }
 
+    private void setSectorProgressView ()
+    {
+        Cursor cursor = mWorddb.query(true, DB_TABLE, new String[]{"Cht","Eng","_id","Level"}, 	null, null, null, null, null, null);
+        int maxCount =cursor.getCount();
+        int learn=0;
+
+        cursor.moveToFirst();
+        for (int i = 1; i <= maxCount; i++) {
+            if (cursor.getInt(3) == 3) {
+                learn = learn + 1;
+                cursor.moveToNext();
+            } else cursor.moveToNext();
+        }
+
+        int allword =maxCount;
+        int learnword =learn;
+        final float result =(float)learnword/(float) allword*100;
+        cursor.close();
+
+
+        String a="字庫裡共有"+allword+"個 已背完 "+learn +"個 請持續努力";
+        String b="已背完全部單字了 新增單字或 試試隨機模式! ";
+        String c="字庫裡沒單字囉  ";
+        judge=(TextView) findViewById(R.id.judge);
+        percent=(TextView)findViewById(R.id.percent);
+        if(allword!=0&&result<100)judge.setText(a);
+        if (allword!=0&&result==100)judge.setText(b);
+        if (allword==0)judge.setText(c);
+
+
+        crpv = (ColorfulRingProgressView) findViewById(R.id.crpv);
+        percent.setText(String.valueOf((int) result)+"%");
+
+        crpv.setPercent(result);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
 
     @Override
@@ -84,6 +130,7 @@ public class testWordSetMode extends AppCompatActivity {
         setContentView(R.layout.activity_test_word_set_mode);
         iniz();
         setActionBar();
+        setSectorProgressView();
 
     }
 
@@ -105,12 +152,14 @@ public class testWordSetMode extends AppCompatActivity {
                 case R.id.rbbNotLearn:
                     learnModeInput(rowCount,c);
                     break;
-                case  R.id.rbRandom :
+                case  R.id.rbRandom:
                     RandModeInput(rowCount,c);
                     break;
             }
             c.close();
             CheckWordEmpty(srrEng);
+
+
 
 
         }
