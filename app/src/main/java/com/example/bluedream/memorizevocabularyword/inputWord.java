@@ -1,6 +1,5 @@
 package com.example.bluedream.memorizevocabularyword;
 
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +11,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +22,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_FILE;
 import static com.example.bluedream.memorizevocabularyword.MainActivity.DB_TABLE;
 
 public class inputWord extends AppCompatActivity  {
@@ -210,6 +213,38 @@ public class inputWord extends AppCompatActivity  {
         mBtnAddWord.setOnClickListener(addWord);
         mbtnRemoveLastWord.setOnClickListener(removeLastWord);
         mbtnInputExit.setOnClickListener(exit);
+
+        InputFilter Engtype = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                Pattern p = Pattern.compile("[a-zA-Z]+");
+                Matcher m = p.matcher(source.toString());
+                if (!m.matches())
+                {
+                    Toast.makeText(inputWord.this,"請輸入英文",Toast.LENGTH_SHORT).show();
+                    return "";
+                }
+                return null;
+            }
+        };
+
+        InputFilter Chttype = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                Pattern p = Pattern.compile("[\u4e00-\u9fa5]+");
+                Matcher m = p.matcher(source.toString());
+                if (!m.matches())
+                {
+                    Toast.makeText(inputWord.this,"請輸入中文",Toast.LENGTH_SHORT).show();
+                    return "";
+                }
+                return null;
+            }
+        };
+
+        medtEng.setFilters(new InputFilter[]{Engtype});
+        medtCht.setFilters(new InputFilter[]{Chttype});
+
     }
 
     @Override

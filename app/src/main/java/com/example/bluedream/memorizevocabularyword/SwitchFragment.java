@@ -19,6 +19,10 @@ public class SwitchFragment {
             //transaction.addToBackStack("noword");
         }
 
+        if(rowCount==-1)
+            transaction.replace(R.id.frameLay, allword, "allword");
+
+
         if (rowCount!=0)
         {
             transaction.replace(R.id.frameLay, wordcard, "wordcard");

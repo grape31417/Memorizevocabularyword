@@ -55,7 +55,7 @@ public class allwordcard extends Fragment {
             c.moveToNext();
         }
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         wordAdapter wordAdapter = new wordAdapter(listStrCht,listStrEng);
         recyclerView.setAdapter(wordAdapter);
         c.close();

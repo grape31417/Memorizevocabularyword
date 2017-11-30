@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.timqi.sectorprogressview.ColorfulRingProgressView;
+import com.shinelw.library.ColorArcProgressBar;
 
 import java.util.ArrayList;
 
@@ -39,8 +39,8 @@ public class testWordSetMode extends AppCompatActivity {
     private ArrayList<String> srrEng= new ArrayList();
     private ArrayList<Integer> id= new ArrayList();
     private ArrayList<Integer> level= new ArrayList();
-    private ColorfulRingProgressView crpv;
-    private TextView judge,percent;
+    private ColorArcProgressBar crpv;
+    private TextView judge;
 
 
 
@@ -86,6 +86,8 @@ public class testWordSetMode extends AppCompatActivity {
         Cursor cursor = mWorddb.query(true, DB_TABLE, new String[]{"Cht","Eng","_id","Level"}, 	null, null, null, null, null, null);
         int maxCount =cursor.getCount();
         int learn=0;
+        float result =0;
+
 
         cursor.moveToFirst();
         for (int i = 1; i <= maxCount; i++) {
@@ -97,7 +99,8 @@ public class testWordSetMode extends AppCompatActivity {
 
         int allword =maxCount;
         int learnword =learn;
-        final float result =(float)learnword/(float) allword*100;
+        if(allword!=0)
+        result =(float)learnword/(float) allword*100;
         cursor.close();
 
 
@@ -105,16 +108,13 @@ public class testWordSetMode extends AppCompatActivity {
         String b="已背完全部單字了 新增單字或 試試隨機模式! ";
         String c="字庫裡沒單字囉  ";
         judge=(TextView) findViewById(R.id.judge);
-        percent=(TextView)findViewById(R.id.percent);
         if(allword!=0&&result<100)judge.setText(a);
         if (allword!=0&&result==100)judge.setText(b);
         if (allword==0)judge.setText(c);
 
 
-        crpv = (ColorfulRingProgressView) findViewById(R.id.crpv);
-        percent.setText(String.valueOf((int) result)+"%");
-
-        crpv.setPercent(result);
+        crpv = (ColorArcProgressBar) findViewById(R.id.crpv);
+        crpv.setCurrentValues(result);
 
     }
 

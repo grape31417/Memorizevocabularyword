@@ -4,12 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.graphics.Color;
 
 import java.util.List;
 
@@ -22,8 +19,6 @@ public class wordAdapter extends RecyclerView.Adapter<wordAdapter.ViewHolder> {
     // 儲存要顯示的資料。
     private List<String> mListStringEng;
     private List<String> mListStringCht;
-    public List<String> mListChoseCht;
-    public List<String> mListChoseEnglish;
 
     // ViewHolder 是把項目中所有的 View 物件包起來。
     // 它在 onCreateViewHolder() 中使用。
@@ -31,14 +26,12 @@ public class wordAdapter extends RecyclerView.Adapter<wordAdapter.ViewHolder> {
             implements View.OnClickListener {
         public ImageView mImgView;
         public TextView mTxt;
-        public EditText mSmallEtxt;
         public LinearLayout mViewCard;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mImgView = (ImageView) itemView.findViewById(R.id.imgView);
             mTxt = (TextView) itemView.findViewById(R.id.txt);
-            mSmallEtxt=(EditText)itemView.findViewById(R.id.smalleditText);
             mViewCard=(LinearLayout)itemView.findViewById(R.id.viewcard);
 
 
@@ -49,20 +42,12 @@ public class wordAdapter extends RecyclerView.Adapter<wordAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-            if (mListStringEng.get(getPosition()).equals(mSmallEtxt.getText().toString()))
-            {
-                mViewCard.setBackgroundColor(Color.parseColor("#a2f58f"));
-            }
-            else
-            {
-                mViewCard.setBackgroundColor(Color.parseColor("#ef7a78"));
-                mSmallEtxt.setText(mListStringEng.get(getPosition()));
-
-            }
+            testWord.iRan=getPosition();
+            testWord.ChoseWord = mListStringEng.get(testWord.iRan).toString();
+            testWord.Question.setText(mListStringCht.get(testWord.iRan).toString());
 
         }
     }
-
 
 
     // 建構式，用來接收外部程式傳入的項目資料。

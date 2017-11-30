@@ -69,6 +69,7 @@ public class showWord extends AppCompatActivity {
         setupAutoComPleteAdapter();
         mEdtEng.setOnClickListener(autoComplete);
         mEdtCht.setOnClickListener(autoComplete);
+
     }
 
     @Override
@@ -76,10 +77,6 @@ public class showWord extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_word);
         iniz();
-
-
-
-
         setActionBar();
     }
 
